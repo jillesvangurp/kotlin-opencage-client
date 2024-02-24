@@ -69,6 +69,7 @@ class OpencageClient(
         additionalRequestParams: Map<String, Any> = mapOf()
     ): GeocodeResponse {
         val response = httpClient.get("$baseUrl/v1/json") {
+            header("User-Agent","kotlin-opencage-client/1.0.0 (https://github.com/jillesvangurp/kotlin-opencage-client)")
             parameter("key", apiKey)
             parameter("q", q)
             listOf(
