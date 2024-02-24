@@ -171,7 +171,7 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
   ],
   "rate": {
     "limit": 2500,
-    "remaining": 2465,
+    "remaining": 2454,
     "reset": 1708819200
   },
   "results": [
@@ -320,8 +320,8 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
   },
   "thanks": "For using an OpenCage API",
   "timestamp": {
-    "created_http": "Sat, 24 Feb 2024 08:25:51 GMT",
-    "created_unix": 1708763151
+    "created_http": "Sat, 24 Feb 2024 08:42:26 GMT",
+    "created_unix": 1708764146
   },
   "total_results": 1
 }
