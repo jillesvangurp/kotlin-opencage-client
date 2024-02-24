@@ -1,15 +1,13 @@
 # JsonDsl
 
-This is an opinionated template for creating kotlin multi platform library projects.
+Kotlin multi-platform client for the Opencage geocoding API.
 
-## Batteries included
+## Features
 
-- Gradle wrapper
-- [Refresh versions plugin](https://splitties.github.io/refreshVersions/) - Great way to manage dependencies.
-- [kotlin4example](https://github.com/jillesvangurp/kotlin4example) integrated to generate the readme and any other documentation you are going to write. This is all driven via the tests.
-- Some dependencies for testing (junit, kotest-assertions, etc.)
-- generic publish script that tags and publishes 
-- LICENSE file (MIT)
+- Geocode and reverse geocode using the Opencage API
+- Kotlin friendly API and data classes that model the response.
+- Forward compatible with features that OpenCage adds; anyhting new and unsupported can be accessed via the raw response in `JsonObject` form. Any new unsupported request parameters may be added via an optional parameter that takes a map.
+- Works on all Kotlin platforms. Built around ktor client and kotinx.serialization which work on all Kotlin platforms: jvm, mobile (android/ios), native (windows, linux, mac) and soon web assembly.
 
 ## Gradle
 
@@ -22,6 +20,7 @@ repositories {
         // optional but it speeds up the gradle dependency resolution
         content {
             includeGroup("com.jillesvangurp")
+            includeGroup("com.github.jillesvangurp")
             includeGroup("com.tryformation")
         }
     }
@@ -32,7 +31,7 @@ And then you can add the dependency:
 
 ```kotlin
     // check the latest release tag for the latest version
-    implementation("com.jillesvangurp:json-dsl:1.x.y")
+    implementation("com.jillesvangurp:kotlin-opencage-client:1.x.y")
 ```
 
 ## Example
