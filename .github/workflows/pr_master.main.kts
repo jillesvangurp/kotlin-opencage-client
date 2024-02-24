@@ -56,7 +56,10 @@ val workflow = workflow(
                 name = "build with gradle",
                 action = GradleBuildActionV2(
                     arguments = "check",
-                )
+                ),
+                env = linkedMapOf(
+                    "OPENCAGE_KEY" to expr("secrets.OPENCAGE_KEY")
+                ),
             )
         }
 
