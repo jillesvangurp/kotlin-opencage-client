@@ -1,5 +1,8 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.dsl.jvm.JvmTargetValidationMode
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import java.net.URI
 
 plugins {
     kotlin("multiplatform")
@@ -81,10 +84,13 @@ kotlin {
         }
         jvmTest {
             dependencies {
+                implementation(kotlin("test-junit5", "_"))
+                implementation(Testing.junit.jupiter.api)
+                implementation(Testing.junit.jupiter.engine)
+
                 implementation(Ktor.client.java)
                 implementation("com.github.jillesvangurp:kotlin4example:_")
-                runtimeOnly("org.junit.jupiter:junit-jupiter:_")
-                implementation(kotlin("test-junit"))
+
                 implementation("org.slf4j:jul-to-slf4j:_")
                 implementation("ch.qos.logback:logback-classic:_")
             }
@@ -128,6 +134,57 @@ publishing {
             name = "FormationPublic"
         }
     }
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+    // run tests in parallel
+    systemProperties["junit.jupiter.execution.parallel.enabled"] = "true"
+    // executes test classes concurrently
+    systemProperties["junit.jupiter.execution.parallel.mode.default"] = "concurrent"
+    // executes tests inside a class concurrently
+    systemProperties["junit.jupiter.execution.parallel.mode.classes.default"] = "concurrent"
+    systemProperties["junit.jupiter.execution.parallel.config.strategy"] = "dynamic"
+    // random order of test class execution
+    systemProperties["junit.jupiter.testclass.order.default"] = "org.junit.jupiter.api.ClassOrderer\$Random"
+
+    testLogging.exceptionFormat = TestExceptionFormat.FULL
+    testLogging.events = setOf(
+        TestLogEvent.FAILED,
+        TestLogEvent.PASSED,
+        TestLogEvent.SKIPPED,
+        TestLogEvent.STANDARD_ERROR,
+        TestLogEvent.STANDARD_OUT
+    )
+    addTestListener(object : TestListener {
+        val failures = mutableListOf<String>()
+        override fun beforeSuite(desc: TestDescriptor) {
+        }
+
+        override fun afterSuite(desc: TestDescriptor, result: TestResult) {
+        }
+
+        override fun beforeTest(desc: TestDescriptor) {
+        }
+
+        override fun afterTest(desc: TestDescriptor, result: TestResult) {
+            if (result.resultType == TestResult.ResultType.FAILURE) {
+                val report =
+                    """
+                    TESTFAILURE ${desc.className} - ${desc.name}
+                    ${
+                        result.exception?.let { e ->
+                            """
+                            ${e::class.simpleName} ${e.message}
+                        """.trimIndent()
+                        }
+                    }
+                    -----------------
+                    """.trimIndent()
+                failures.add(report)
+            }
+        }
+    })
 }
 
 
