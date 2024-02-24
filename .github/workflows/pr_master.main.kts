@@ -2,10 +2,7 @@
 
 @file:DependsOn("io.github.typesafegithub:github-workflows-kt:1.8.0")
 
-import io.github.typesafegithub.workflows.actions.actions.CheckoutV4
-import io.github.typesafegithub.workflows.actions.actions.GithubScriptV7
-import io.github.typesafegithub.workflows.actions.actions.SetupJavaV4
-import io.github.typesafegithub.workflows.actions.actions.SetupNodeV4
+import io.github.typesafegithub.workflows.actions.actions.*
 import io.github.typesafegithub.workflows.actions.docker.BuildPushActionV5
 import io.github.typesafegithub.workflows.actions.docker.SetupBuildxActionV3
 import io.github.typesafegithub.workflows.actions.googlegithubactions.AuthV2
@@ -49,6 +46,13 @@ val workflow = workflow(
                 javaVersion = "21",
                 distribution = SetupJavaV4.Distribution.Corretto,
                 cache = SetupJavaV4.BuildPlatform.Gradle,
+            )
+        )
+        uses(
+            name = "cache konan dir",
+            action = CacheV3(
+                path = listOf("~/.konan/**/*"),
+                key = ".konan"
             )
         )
         run {
