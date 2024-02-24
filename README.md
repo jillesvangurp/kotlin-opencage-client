@@ -2,7 +2,7 @@
 
 [![Process Pull Request](https://github.com/jillesvangurp/kotlin-opencage-client/actions/workflows/pr_master.yaml/badge.svg)](https://github.com/jillesvangurp/kotlin-opencage-client/actions/workflows/pr_master.yaml)
 
-Kotlin multi-platform client for the Opencage geocoding API.
+Kotlin multi-platform client for the [Opencage](https://opencagedata.com/) geocoding API.
 
 ## Features
 
@@ -173,7 +173,7 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
   ],
   "rate": {
     "limit": 2500,
-    "remaining": 2444,
+    "remaining": 2434,
     "reset": 1708819200
   },
   "results": [
@@ -322,8 +322,8 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
   },
   "thanks": "For using an OpenCage API",
   "timestamp": {
-    "created_http": "Sat, 24 Feb 2024 08:48:37 GMT",
-    "created_unix": 1708764517
+    "created_http": "Sat, 24 Feb 2024 08:53:09 GMT",
+    "created_unix": 1708764789
   },
   "total_results": 1
 }
