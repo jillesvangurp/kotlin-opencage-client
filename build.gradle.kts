@@ -9,6 +9,14 @@ plugins {
 
 repositories {
     mavenCentral()
+    maven("https://maven.tryformation.com/releases") {
+        // optional but it speeds up the gradle dependency resolution
+        content {
+            includeGroup("com.jillesvangurp")
+            includeGroup("com.github.jillesvangurp")
+            includeGroup("com.tryformation")
+        }
+    }
     maven(url = "https://jitpack.io") {
         content {
             includeGroup("com.github.jillesvangurp")
@@ -46,6 +54,14 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(kotlin("stdlib-common"))
+                implementation("io.github.microutils:kotlin-logging:_")
+                implementation("io.ktor:ktor-client-logging:_")
+                implementation("io.ktor:ktor-serialization-kotlinx:_")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:_")
+                implementation("io.ktor:ktor-client-content-negotiation:_")
+                implementation("com.github.jillesvangurp:geogeometry:_")
+                implementation(KotlinX.datetime)
+
             }
         }
 
@@ -60,6 +76,8 @@ kotlin {
         jvmMain  {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
+                implementation(Ktor.client.cio)
+
             }
         }
         jvmTest {
@@ -67,6 +85,8 @@ kotlin {
                 implementation("com.github.jillesvangurp:kotlin4example:_")
                 runtimeOnly("org.junit.jupiter:junit-jupiter:_")
                 implementation(kotlin("test-junit"))
+                implementation("org.slf4j:jul-to-slf4j:_")
+                implementation("ch.qos.logback:logback-classic:_")
             }
         }
 
@@ -79,6 +99,7 @@ kotlin {
         jsTest  {
             dependencies {
                 implementation(kotlin("test-js"))
+                implementation("io.ktor:ktor-client-js:_")
             }
         }
 

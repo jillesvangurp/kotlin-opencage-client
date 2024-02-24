@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<configuration debug="true">
+    <!-- IMPORTANT:
+
+    Keep the test logs readable. Kill all the noise.
+
+    Look at the log statistics at the end:
+
+    - keep errors at zero; we count them for a reason.
+    - don't commit changes that re-enable debug or trace logging (disable before you commit)
+    - shut up any pointless/irrelevant loggers
+
+    -->
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                %boldBlue(%date{dd-MM-yyyy'T'HH:mm:ssZ}) %highlight(%.-1level .\(%file:%line\) %thread %logger{200}) -
+                %msg %highlight(%mdc) %n
+            </pattern>
+        </encoder>
+    </appender>
+    <appender name="ASYNC-STDOUT" class="ch.qos.logback.classic.AsyncAppender" queueSize="2048">
+        <appender-ref ref="STDOUT"/>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>build/tests.log</file>
+        <append>false</append>
+        <!-- set immediateFlush to false for much higher logging throughput -->
+        <immediateFlush>false</immediateFlush>
+        <!-- encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>
+                %boldBlue(%date{dd-MM-yyyy'T'HH:mm:ssZ}) %highlight(%.-1level .\(%file:%line\) %thread %logger{0}) -
+                %msg %highlight(%mdc) %n
+            </pattern>
+        </encoder>
+    </appender>
+
+
+    <!--
+    Set a bunch of loggers to INFO so we don't drown in debug logging
+     add more if libraries are being overly chatty and use weird logger names
+     we only want to see our debug statements
+    -->
+    <logger name="com" level="INFO"/>
+    <logger name="io" level="INFO"/>
+    <logger name="org" level="INFO"/>
+    <logger name="jdk" level="INFO"/>
+    <logger name="java" level="INFO"/>
+
+    <!-- configure a few very obnoxious loggers to shut up some more-->
+    <logger name="org.springframework.test.context.support.AnnotationConfigContextLoaderUtils" level="WARN"/>
+    <logger name="AUTH_ISSUES" level="WARN"/>
+
+    <logger name="io.grpc.netty"
+            level="OFF"/> <!-- non fatal error for m1 https://github.com/netty/netty/issues/11020 -->
+    <logger name="io.netty.resolver.dns" level="OFF"/>
+
+
+    <root level="DEBUG">
+        <appender-ref ref="ASYNC-STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>

@@ -1,4 +1,4 @@
-rootProject.name = "json-dsl"
+rootProject.name = "kotlin-opencage-client"
 
 pluginManagement {
     repositories {

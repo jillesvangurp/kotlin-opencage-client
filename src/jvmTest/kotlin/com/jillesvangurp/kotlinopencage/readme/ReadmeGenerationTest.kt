@@ -1,11 +1,8 @@
-package com.jillesvangurp.jsondsl.readme
+package com.jillesvangurp.kotlinopencage.readme
 
-import com.jillesvangurp.jsondsl.*
 import com.jillesvangurp.kotlin4example.SourceRepository
 import kotlin.test.Test
 import java.io.File
-import kotlin.math.PI
-import kotlin.reflect.KProperty
 
 const val githubLink = "https://github.com/formation-res/pg-docstore"
 
