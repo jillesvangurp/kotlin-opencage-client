@@ -54,47 +54,6 @@ val client = OpencageClient(
 )
 ```
 
-### Customizing ktor client & selecting a client implementation
-
-This project use ktor-client. This makes it possible to use this library on all the 
-different platforms that Kotlin has. However, it does mean that you have to 
-select client implementations for your platform. Ktor provides quite a few of these.
-                 
-Refer to the [ktor documentation](https://ktor.io/docs/http-client-engines.html#minimal-version) 
-for a list of available clients. 
-
-For example, this readme is generated from a junit test running on the 
-jvm platform. There are several options for the jvm and we picked the Java client 
-(others are CIO, Apache, and Jetty).
-
-To use the Java client on the jvm, simplye add this to your jvmMain dependencies in `build.gradle.kts` 
-
-```kotlin
-implementation("io.ktor:ktor-client-java:\{'$'}ktor_version")
-```
-
-The OpencageClient constructor has an httpClient parameter with a sane default that you can override.
-
-```kotlin
-val client = OpencageClient(
-  apiKey = "XXXXXX",
-  // configures an httpclient with trace logging installed
-  httpClient = HttpClient(
-) {
-    engine {
-      pipelining = true
-    }
-    install(ContentNegotiation) {
-      // we include sane defaults for kotlinx.serialization
-      json(DEFAULT_JSON)
-    }
-    install(Logging) {
-      level = LogLevel.ALL
-    }
-  }
-)
-```
-
 ### Calling the API
 
 The only required parameter on geocode is the q parameter. All the other parameters are supported as well but default to null. 
@@ -112,25 +71,28 @@ response.results.first().let {best ->
   println(best.formatted)
   println(best.components)
   println("confidence: ${best.confidence}")
+
+  // extract the point and construct a geojson.io link
+  println(best.geometry?.asPoint?.geoJsonIOUrl)
 }
 ```
 
 As you can see from the output, all the important parts of the response are parsed
-and exposed via nice data classes.
+and exposed via nice data classes.                  
 
 This produces the following output.
 
 ```text
 Found 1
 Wattstraße 11, 13355 Berlin, Germany
-Components(iso3166TwoLetterCode=DE, iso3166ThreeLetterCode=DEU, countryWithSubdi
-vision=[DE-BE], category=building, normalizedCity=Berlin, type=null, city=Berlin
-, continent=Europe, country=Germany, countryCode=de, houseNumber=11, postcode=13
-355, borrow=null, neighbourhood=Brunnenviertel, politicalUnion=European Union, r
-estaurant=null, road=Wattstraße, state=Berlin, stateCode=BE, suburb=Gesundbrunne
-n)
+Components(iso3166TwoLetterCode=DE, iso3166ThreeLetterCode=DEU, countryWithSubdivision=[DE-BE], category=building, normalizedCity=Berlin, type=null, city=Berlin, continent=Europe, country=Germany, countryCode=de, houseNumber=11, postcode=13355, borrow=null, neighbourhood=Brunnenviertel, politicalUnion=European Union, restaurant=null, road=Wattstraße, state=Berlin, stateCode=BE, suburb=Gesundbrunnen)
 confidence: 10.0
+https://geojson.io/#data=data%3Aapplication%2Fjson%2C%7B%22features%22%3A%5B%7B%22geometry%22%3A%7B%22type%22%3A%22Point%22%2C%22coordinates%22%3A%5B13.3905952%2C52.5412642%5D%7D%2C%22type%22%3A%22Feature%22%7D%5D%2C%22type%22%3A%22FeatureCollection%22%7D
 ```
+
+The client depends on my [geogeometry](https://github.com/jillesvangurp/geogeometry) library,
+ which includes kotlinx.serialization compatible GeoJson model classes as well as 
+ some nice features to open geojson.io with a url that embeds the geojson.                
 
 ### Working with the raw response
 
@@ -173,7 +135,7 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
   ],
   "rate": {
     "limit": 2500,
-    "remaining": 2434,
+    "remaining": 2419,
     "reset": 1708819200
   },
   "results": [
@@ -322,11 +284,52 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
   },
   "thanks": "For using an OpenCage API",
   "timestamp": {
-    "created_http": "Sat, 24 Feb 2024 08:53:09 GMT",
-    "created_unix": 1708764789
+    "created_http": "Sat, 24 Feb 2024 09:15:18 GMT",
+    "created_unix": 1708766118
   },
   "total_results": 1
 }
+```
+
+### Customizing ktor client & selecting a client implementation
+
+This project use ktor-client. This makes it possible to use this library on all the 
+different platforms that Kotlin has. However, it does mean that you have to 
+select client implementations for your platform. Ktor provides quite a few of these.
+                 
+Refer to the [ktor documentation](https://ktor.io/docs/http-client-engines.html#minimal-version) 
+for a list of available clients. 
+
+For example, this readme is generated from a junit test running on the 
+jvm platform. There are several options for the jvm and we picked the Java client 
+(others are CIO, Apache, and Jetty).
+
+To use the Java client on the jvm, simplye add this to your jvmMain dependencies in `build.gradle.kts` 
+
+```kotlin
+implementation("io.ktor:ktor-client-java:\{'$'}ktor_version")
+```
+
+The OpencageClient constructor has an httpClient parameter with a sane default that you can override.
+
+```kotlin
+val client = OpencageClient(
+  apiKey = "XXXXXX",
+  // configures an httpclient with trace logging installed
+  httpClient = HttpClient(
+  ) {
+    engine {
+      pipelining = true
+    }
+    install(ContentNegotiation) {
+      // we include sane defaults for kotlinx.serialization
+      json(DEFAULT_JSON)
+    }
+    install(Logging) {
+      level = LogLevel.ALL
+    }
+  }
+)
 ```
 
 ## Multi platform
