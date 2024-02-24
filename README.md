@@ -1,5 +1,7 @@
 # Kotlin Opencage Client
 
+[![Process Pull Request](https://github.com/jillesvangurp/kotlin-opencage-client/actions/workflows/pr_master.yaml/badge.svg)](https://github.com/jillesvangurp/kotlin-opencage-client/actions/workflows/pr_master.yaml)
+
 Kotlin multi-platform client for the Opencage geocoding API.
 
 ## Features
@@ -171,7 +173,7 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
   ],
   "rate": {
     "limit": 2500,
-    "remaining": 2454,
+    "remaining": 2444,
     "reset": 1708819200
   },
   "results": [
@@ -202,9 +204,9 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
           }
         },
         "OSM": {
-          "edit_url": "https://www.openstreetmap.org/edit?relation=1505873#map=17/52.54126/13.39060",
-          "note_url": "https://www.openstreetmap.org/note/new#map=17/52.54126/13.39060&layers=N",
-          "url": "https://www.openstreetmap.org/?mlat=52.54126&mlon=13.39060#map=17/52.54126/13.39060"
+          "edit_url": "https://www.openstreetmap.org/edit?relation=1505873#map=16/52.54126/13.39060",
+          "note_url": "https://www.openstreetmap.org/note/new#map=16/52.54126/13.39060&layers=N",
+          "url": "https://www.openstreetmap.org/?mlat=52.54126&mlon=13.39060#map=16/52.54126/13.39060"
         },
         "UN_M49": {
           "regions": {
@@ -320,8 +322,8 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
   },
   "thanks": "For using an OpenCage API",
   "timestamp": {
-    "created_http": "Sat, 24 Feb 2024 08:42:26 GMT",
-    "created_unix": 1708764146
+    "created_http": "Sat, 24 Feb 2024 08:48:37 GMT",
+    "created_unix": 1708764517
   },
   "total_results": 1
 }

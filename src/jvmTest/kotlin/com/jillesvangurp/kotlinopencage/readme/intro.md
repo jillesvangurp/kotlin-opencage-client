@@ -1,3 +1,5 @@
+[![Process Pull Request](https://github.com/jillesvangurp/kotlin-opencage-client/actions/workflows/pr_master.yaml/badge.svg)](https://github.com/jillesvangurp/kotlin-opencage-client/actions/workflows/pr_master.yaml)
+
 Kotlin multi-platform client for the Opencage geocoding API.
 
 ## Features
