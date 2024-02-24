@@ -47,3 +47,5 @@ jobs:
       uses: 'gradle/gradle-build-action@v2'
       with:
         arguments: 'check'
+      env:
+        OPENCAGE_KEY: '${{ secrets.OPENCAGE_KEY }}'
