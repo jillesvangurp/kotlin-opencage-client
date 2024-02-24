@@ -44,9 +44,52 @@ Get your api key from Opencage and provide it to the client.
 
 Note. **never commit your key to a git repository and use e.g. a secret manager**.
 
+Also, please read the [guidelines for protecting your keys](https://opencagedata.com/guides/how-to-protect-your-api-key)
+
 ```kotlin
 val client = OpencageClient(
   apiKey = "XXXXXX"
+)
+```
+
+### Customizing ktor client & selecting a client implementation
+
+This project use ktor-client. This makes it possible to use this library on all the 
+different platforms that Kotlin has. However, it does mean that you have to 
+select client implementations for your platform. Ktor provides quite a few of these.
+                 
+Refer to the [ktor documentation](https://ktor.io/docs/http-client-engines.html#minimal-version) 
+for a list of available clients. 
+
+For example, this readme is generated from a junit test running on the 
+jvm platform. There are several options for the jvm and we picked the Java client 
+(others are CIO, Apache, and Jetty).
+
+To use the Java client on the jvm, simplye add this to your jvmMain dependencies in `build.gradle.kts` 
+
+```kotlin
+implementation("io.ktor:ktor-client-java:\{'$'}ktor_version")
+```
+
+The OpencageClient constructor has an httpClient parameter with a sane default that you can override.
+
+```kotlin
+val client = OpencageClient(
+  apiKey = "XXXXXX",
+  // configures an httpclient with trace logging installed
+  httpClient = HttpClient(
+) {
+    engine {
+      pipelining = true
+    }
+    install(ContentNegotiation) {
+      // we include sane defaults for kotlinx.serialization
+      json(DEFAULT_JSON)
+    }
+    install(Logging) {
+      level = LogLevel.ALL
+    }
+  }
 )
 ```
 
@@ -101,13 +144,14 @@ val response = client.geocode(
   "52.54125444670068, 13.390771722807354"
 )
 
-println("Total results ${response.totalResults} ..")
-println(".. or get it from the object: ${response["total_results"]?.jsonPrimitive?.long}")
+println("total: ${response.totalResults} ..")
+println(".. or get it from the json: " +
+    "${response["total_results"]?.jsonPrimitive?.long}")
 ```
 
 ```text
-This is the same 1 ..
-.. as 1
+total: 1 ..
+.. or get it from the json: 1
 ```
 
 And of course you can print the full response as well
@@ -127,7 +171,7 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
   ],
   "rate": {
     "limit": 2500,
-    "remaining": 2480,
+    "remaining": 2465,
     "reset": 1708819200
   },
   "results": [
@@ -276,8 +320,8 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
   },
   "thanks": "For using an OpenCage API",
   "timestamp": {
-    "created_http": "Sat, 24 Feb 2024 07:53:48 GMT",
-    "created_unix": 1708761228
+    "created_http": "Sat, 24 Feb 2024 08:25:51 GMT",
+    "created_unix": 1708763151
   },
   "total_results": 1
 }
