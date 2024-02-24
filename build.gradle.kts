@@ -76,12 +76,12 @@ kotlin {
         jvmMain  {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
-                implementation(Ktor.client.cio)
 
             }
         }
         jvmTest {
             dependencies {
+                implementation(Ktor.client.java)
                 implementation("com.github.jillesvangurp:kotlin4example:_")
                 runtimeOnly("org.junit.jupiter:junit-jupiter:_")
                 implementation(kotlin("test-junit"))
