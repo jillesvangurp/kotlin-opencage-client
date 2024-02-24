@@ -13,12 +13,13 @@ import kotlinx.serialization.encodeToString
 import kotlin.test.Test
 
 class OpenCageTest {
+    val client by lazy {
+        OpencageClient(apiKey = openCageKey)
+    }
 
     @Test
     fun `should geocoode`() {
         runBlocking {
-            val client = OpencageClient(apiKey = openCageKey)
-
             client.geocode(q="52.54125444670068, 13.390771722807354").let { resp->
                 println(DEFAULT_PRETTY_JSON.encodeToString(resp))
 
@@ -36,6 +37,13 @@ class OpenCageTest {
 
 
             }
+        }
+    }
+
+    @Test
+    fun `should find nothing`() {
+        runBlocking {
+            client.geocode("NOWHERE-INTERESTING").totalResults shouldBe 0
         }
     }
 }
