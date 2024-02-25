@@ -18,7 +18,7 @@ class OpenCageTest {
     }
 
     @Test
-    fun `should geocoode`() {
+    fun `should geocode`() {
         runBlocking {
             client.geocode(q="52.54125444670068, 13.390771722807354").let { resp->
                 println(DEFAULT_PRETTY_JSON.encodeToString(resp))
