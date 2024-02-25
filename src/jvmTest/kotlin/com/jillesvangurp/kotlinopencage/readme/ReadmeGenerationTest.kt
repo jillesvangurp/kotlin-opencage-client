@@ -39,9 +39,6 @@ val readmeMd = sourceGitRepository.md {
     includeMdFile("intro.md")
     val client = OpencageClient(apiKey = openCageKey)
     section("Examples") {
-        +"""
-            The main feature of [kotlin4example](https://github.com/jillesvangurp/kotlin4example) is of course integrating code samples into your documentation.   
-        """.trimIndent()
         subSection("Create client") {
             +"""
                 Get your api key from Opencage and provide it to the client. 

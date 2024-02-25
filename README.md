@@ -38,8 +38,6 @@ And then you can add the dependency:
 
 ## Examples
 
-The main feature of [kotlin4example](https://github.com/jillesvangurp/kotlin4example) is of course integrating code samples into your documentation.   
-
 ### Create client
 
 Get your api key from Opencage and provide it to the client. 
@@ -135,8 +133,8 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
   ],
   "rate": {
     "limit": 2500,
-    "remaining": 2419,
-    "reset": 1708819200
+    "remaining": 2498,
+    "reset": 1708905600
   },
   "results": [
     {
@@ -166,9 +164,9 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
           }
         },
         "OSM": {
-          "edit_url": "https://www.openstreetmap.org/edit?relation=1505873#map=16/52.54126/13.39060",
-          "note_url": "https://www.openstreetmap.org/note/new#map=16/52.54126/13.39060&layers=N",
-          "url": "https://www.openstreetmap.org/?mlat=52.54126&mlon=13.39060#map=16/52.54126/13.39060"
+          "edit_url": "https://www.openstreetmap.org/edit?relation=1505873#map=17/52.54126/13.39060",
+          "note_url": "https://www.openstreetmap.org/note/new#map=17/52.54126/13.39060&layers=N",
+          "url": "https://www.openstreetmap.org/?mlat=52.54126&mlon=13.39060#map=17/52.54126/13.39060"
         },
         "UN_M49": {
           "regions": {
@@ -207,16 +205,16 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
         },
         "sun": {
           "rise": {
-            "apparent": 1708754760,
-            "astronomical": 1708747980,
-            "civil": 1708752720,
-            "nautical": 1708750320
+            "apparent": 1708841040,
+            "astronomical": 1708834260,
+            "civil": 1708839000,
+            "nautical": 1708836600
           },
           "set": {
-            "apparent": 1708792440,
-            "astronomical": 1708799280,
-            "civil": 1708794540,
-            "nautical": 1708796880
+            "apparent": 1708878960,
+            "astronomical": 1708885800,
+            "civil": 1708881060,
+            "nautical": 1708883400
           }
         },
         "timezone": {
@@ -284,8 +282,8 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
   },
   "thanks": "For using an OpenCage API",
   "timestamp": {
-    "created_http": "Sat, 24 Feb 2024 09:15:18 GMT",
-    "created_unix": 1708766118
+    "created_http": "Sun, 25 Feb 2024 10:52:57 GMT",
+    "created_unix": 1708858377
   },
   "total_results": 1
 }
