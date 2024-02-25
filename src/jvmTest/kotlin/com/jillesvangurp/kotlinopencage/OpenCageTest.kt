@@ -34,8 +34,6 @@ class OpenCageTest {
                     wattStr.geometry?.asPoint?.coordinates?.latitude!! shouldBeGreaterThan 52.0
                     wattStr.geometry?.asPoint?.coordinates?.latitude!! shouldBeLessThan 53.0
                 } shouldNotBe null
-
-
             }
         }
     }

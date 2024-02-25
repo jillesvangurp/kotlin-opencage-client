@@ -68,11 +68,13 @@ private fun Any.stringify(): String {
 fun JsonElement?.getElement(vararg keys: Any): JsonElement? {
     return if(keys.isNotEmpty()) {
         when (this) {
-            is JsonObject -> get(keys[0].stringify())?.let {
-                if(keys.size==1) {
-                    it
-                } else {
-                    it.getElement(*keys.sliceArray(1..<keys.size))
+            is JsonObject -> {
+                get(keys[0].stringify())?.let {
+                    if(keys.size==1) {
+                        it
+                    } else {
+                        it.getElement(*keys.sliceArray(1..<keys.size))
+                    }
                 }
             }
             else -> null
@@ -97,23 +99,23 @@ fun JsonObject?.getDoubleList(vararg keys: Any): List<Double>? = getElement(*key
     a.map { e -> e.jsonPrimitive.double }
 }
 
-fun <T> JsonObject?.deserialize(serializer: KSerializer<T>, vararg keys: Any) = getElement(keys)?.let {
+fun <T> JsonObject?.deserialize(serializer: KSerializer<T>, vararg keys: Any) = getElement(*keys)?.let {
     DEFAULT_JSON.decodeFromJsonElement(serializer,it)
 }
 
-inline fun <reified T> JsonObject?.deserialize(vararg keys: Any) = getElement(keys)?.let {
+inline fun <reified T> JsonObject?.deserialize(vararg keys: Any) = getElement(*keys)?.let {
     DEFAULT_JSON.decodeFromJsonElement<T>(it)
 }
 
-fun <T> JsonObject?.deserializeList(serializer: KSerializer<T>, vararg keys: Any) = getArray(keys)?.map {
+fun <T> JsonObject?.deserializeList(serializer: KSerializer<T>, vararg keys: Any) = getArray(*keys)?.map {
     DEFAULT_JSON.decodeFromJsonElement(serializer,it)
 }
 
-inline fun <reified T> JsonObject?.deserializeList(vararg keys: Any) = getArray(keys)?.map {
+inline fun <reified T> JsonObject?.deserializeList(vararg keys: Any) = getArray(*keys)?.map {
     DEFAULT_JSON.decodeFromJsonElement<T>(it)
 }
 
-fun JsonObject?.getPoint(vararg keys: Any) = getObject(keys).asPoint
+fun JsonObject?.getPoint(vararg keys: Any) = getObject(*keys).asPoint
 
 val JsonObject?.asPoint get() = this.getDouble("lng")?.let {longitude ->
     val latitude = this.getDouble("lat")?: error("missing lat")

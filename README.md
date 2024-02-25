@@ -94,27 +94,33 @@ The client depends on my [geogeometry](https://github.com/jillesvangurp/geogeome
 
 ### Working with the raw response
 
-The return type of `geocode` is actually a kotlinx.serialization `JsonObject`.
-
+The return type of `geocode` is `GeocodeResponse` is a type alias for
+the kotlinx.serialization `JsonObject`.
+              
 All the important parts of that are exposed via extension properties.
 
-However, if Opencage adds new things to the response, you can always get to those
-by poking around in the JsonObject.
+However, if Opencage adds new things to the response, you can always get to those things
+by poking around in the JsonObject directly.
+
+The reason this is implemented this way is forward compatibility.
 
 ```kotlin
 val response = client.geocode(
   "52.54125444670068, 13.390771722807354"
 )
-
+// an extension property
 println("total: ${response.totalResults} ..")
 println(".. or get it from the json: " +
-    "${response["total_results"]?.jsonPrimitive?.long}")
+    "${response.getLong("total_results")}")
 ```
 
 ```text
 total: 1 ..
 .. or get it from the json: 1
 ```
+
+Note we are using one of the provided convenience functions `getLong` for getting
+things out of JsonObjects. 
 
 And of course you can print the full response as well
 
@@ -133,7 +139,7 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
   ],
   "rate": {
     "limit": 2500,
-    "remaining": 2498,
+    "remaining": 2473,
     "reset": 1708905600
   },
   "results": [
@@ -164,9 +170,9 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
           }
         },
         "OSM": {
-          "edit_url": "https://www.openstreetmap.org/edit?relation=1505873#map=17/52.54126/13.39060",
-          "note_url": "https://www.openstreetmap.org/note/new#map=17/52.54126/13.39060&layers=N",
-          "url": "https://www.openstreetmap.org/?mlat=52.54126&mlon=13.39060#map=17/52.54126/13.39060"
+          "edit_url": "https://www.openstreetmap.org/edit?relation=1505873#map=16/52.54126/13.39060",
+          "note_url": "https://www.openstreetmap.org/note/new#map=16/52.54126/13.39060&layers=N",
+          "url": "https://www.openstreetmap.org/?mlat=52.54126&mlon=13.39060#map=16/52.54126/13.39060"
         },
         "UN_M49": {
           "regions": {
@@ -282,11 +288,22 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
   },
   "thanks": "For using an OpenCage API",
   "timestamp": {
-    "created_http": "Sun, 25 Feb 2024 10:52:57 GMT",
-    "created_unix": 1708858377
+    "created_http": "Sun, 25 Feb 2024 12:10:12 GMT",
+    "created_unix": 1708863012
   },
   "total_results": 1
 }
+```
+
+This also works for annotations.
+
+```kotlin
+val annotations = response.results.first().annotations
+println(annotations.getString("flag"))
+// you can recursively get stuff
+println(annotations.getString("what3words","words"))
+// Works for String, Double, Boolean, JsonArray, JsonObject ..
+println(annotations.getDouble("bounds","northeast","lat"))
 ```
 
 ### Customizing ktor client & selecting a client implementation
