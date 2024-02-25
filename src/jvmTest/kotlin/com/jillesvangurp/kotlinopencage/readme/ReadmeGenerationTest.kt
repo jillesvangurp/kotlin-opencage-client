@@ -93,12 +93,15 @@ val readmeMd = sourceGitRepository.md {
 
         subSection("Working with the raw response") {
             +"""
-                The return type of `geocode` is actually a kotlinx.serialization `JsonObject`.
-                
+                The return type of `geocode` is `GeocodeResponse` is a type alias for
+                the kotlinx.serialization `JsonObject`.
+                              
                 All the important parts of that are exposed via extension properties.
                 
-                However, if Opencage adds new things to the response, you can always get to those
-                by poking around in the JsonObject.
+                However, if Opencage adds new things to the response, you can always get to those things
+                by poking around in the JsonObject directly.
+                
+                The reason this is implemented this way is forward compatibility.
             """.trimIndent()
 
             val response = runBlocking {  client.geocode(
@@ -108,21 +111,36 @@ val readmeMd = sourceGitRepository.md {
                 val response = client.geocode(
                     "52.54125444670068, 13.390771722807354"
                 )
-
+                // an extension property
                 println("total: ${response.totalResults} ..")
                 println(".. or get it from the json: " +
-                        "${response["total_results"]?.jsonPrimitive?.long}")
+                        "${response.getLong("total_results")}")
             }.let {
                 mdCodeBlock(it.stdOut,"text")
             }
 
             +"""
+                Note we are using one of the provided convenience functions `getLong` for getting
+                things out of JsonObjects. 
+                
                 And of course you can print the full response as well
             """.trimIndent()
             example {
                 println(DEFAULT_PRETTY_JSON.encodeToString(response))
             }.let {
                 mdCodeBlock(it.stdOut,"json", allowLongLines = true)
+            }
+
+            +"""
+                This also works for annotations.
+            """.trimIndent()
+            example {
+                val annotations = response.results.first().annotations
+                println(annotations.getString("flag"))
+                // you can recursively get stuff
+                println(annotations.getString("what3words","words"))
+                // Works for String, Double, Boolean, JsonArray, JsonObject ..
+                println(annotations.getDouble("bounds","northeast","lat"))
             }
         }
         subSection("Customizing ktor client & selecting a client implementation") {
