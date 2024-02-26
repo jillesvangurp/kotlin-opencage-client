@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED_VARIABLE", "NAME_SHADOWING")
+
 package com.jillesvangurp.kotlinopencage.readme
 
 import com.jillesvangurp.geojson.geoJsonIOUrl
@@ -141,28 +143,34 @@ val readmeMd = sourceGitRepository.md {
                 println(annotations.getString("what3words","words"))
                 // Works for String, Double, Boolean, JsonArray, JsonObject ..
                 println(annotations.getDouble("bounds","northeast","lat"))
+            }.let {
+                mdCodeBlock(it.stdOut,"json", allowLongLines = true)
             }
         }
         subSection("Customizing ktor client & selecting a client implementation") {
             +"""
-                This project use ktor-client. This makes it possible to use this library on all the 
-                different platforms that Kotlin has. However, it does mean that you have to 
-                select client implementations for your platform. Ktor provides quite a few of these.
+                This project uses ktor-client for http connectivity. This makes it possible to
+                use this library on all the different platforms that Kotlin has (jvm, native, js, wasm). 
+                
+                However, it does mean that you have to 
+                pick a client implementation. This is as simple as selecting the right
+                 dependency for your platform. Ktor provides quite a few client implementations.
                                  
                 Refer to the [ktor documentation](https://ktor.io/docs/http-client-engines.html#minimal-version) 
                 for a list of available clients. 
                 
                 For example, this readme is generated from a junit test running on the 
-                jvm platform. There are several options for the jvm and we picked the Java client 
-                (others are CIO, Apache, and Jetty).
+                jvm platform which means it needs a jvm client. There are four different implementations
+                 that you can choose from. We picked the Java client (others are CIO, Apache, and Jetty).
                 
-                To use the Java client on the jvm, simplye add this to your jvmMain dependencies in `build.gradle.kts` 
+                To use the Java client on the jvm, simply add this to your jvmMain dependencies in `build.gradle.kts` 
                 
                 ```kotlin
-                implementation("io.ktor:ktor-client-java:\{'$'}ktor_version")
+                    implementation("io.ktor:ktor-client-java:<ktor_version>")
                 ```
                 
-                The OpencageClient constructor has an httpClient parameter with a sane default that you can override.
+                If you wish to tweak things further, the OpencageClient constructor has an httpClient parameter 
+                with a sane default that you can override with a customized ktor `HttpClient`:
             """.trimIndent()
 
             example {
