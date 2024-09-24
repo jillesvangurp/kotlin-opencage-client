@@ -3,6 +3,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.dsl.jvm.JvmTargetValidationMode
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import java.net.URI
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
     kotlin("multiplatform")
@@ -48,9 +49,13 @@ kotlin {
     macosArm64()
     iosArm64()
     iosX64()
-    // blocked on kotest assertions wasm release
+    // blocked on ktor-client wasm support
 //    @OptIn(ExperimentalWasmDsl::class)
-//    wasmJs()
+//    wasmJs {
+//        browser()
+//        nodejs()
+//        d8()
+//    }
 
     sourceSets {
 
@@ -109,6 +114,13 @@ kotlin {
             }
         }
 
+//        wasmJsTest {
+//            dependencies {
+//                implementation(kotlin("test-wasm-js"))
+//                implementation("io.ktor:ktor-client-wasm:_")
+//            }
+//        }
+
         all {
             languageSettings.optIn("kotlin.RequiresOptIn")
         }
@@ -121,7 +133,7 @@ tasks.withType<KotlinJvmCompile> {
     kotlinOptions {
         // this is the minimum LTS version we support, 8 is no longer supported
         jvmTarget = "11"
-        languageVersion = "1.9"
+        languageVersion = "2.0"
     }
 }
 

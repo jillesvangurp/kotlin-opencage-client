@@ -139,8 +139,8 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
   ],
   "rate": {
     "limit": 2500,
-    "remaining": 2496,
-    "reset": 1708992000
+    "remaining": 2485,
+    "reset": 1727222400
   },
   "results": [
     {
@@ -187,8 +187,7 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
         },
         "callingcode": 49,
         "currency": {
-          "alternate_symbols": [
-          ],
+          "alternate_symbols": [],
           "decimal_mark": ",",
           "html_entity": "€",
           "iso_code": "EUR",
@@ -211,24 +210,24 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
         },
         "sun": {
           "rise": {
-            "apparent": 1708927320,
-            "astronomical": 1708920540,
-            "civil": 1708925220,
-            "nautical": 1708922880
+            "apparent": 1727153820,
+            "astronomical": 1727146860,
+            "civil": 1727151780,
+            "nautical": 1727149380
           },
           "set": {
-            "apparent": 1708965480,
-            "astronomical": 1708972260,
-            "civil": 1708967520,
-            "nautical": 1708969920
+            "apparent": 1727197080,
+            "astronomical": 1727204040,
+            "civil": 1727199120,
+            "nautical": 1727201520
           }
         },
         "timezone": {
           "name": "Europe/Berlin",
-          "now_in_dst": 0,
-          "offset_sec": 3600,
-          "offset_string": "+0100",
-          "short_name": "CET"
+          "now_in_dst": 1,
+          "offset_sec": 7200,
+          "offset_string": "+0200",
+          "short_name": "CEST"
         },
         "what3words": {
           "words": "crunch.oven.arming"
@@ -288,8 +287,8 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
   },
   "thanks": "For using an OpenCage API",
   "timestamp": {
-    "created_http": "Mon, 26 Feb 2024 07:40:53 GMT",
-    "created_unix": 1708933253
+    "created_http": "Tue, 24 Sep 2024 06:28:13 GMT",
+    "created_unix": 1727159293
   },
   "total_results": 1
 }
