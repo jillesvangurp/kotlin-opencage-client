@@ -50,19 +50,19 @@ kotlin {
     iosArm64()
     iosX64()
     // blocked on ktor-client wasm support
-//    @OptIn(ExperimentalWasmDsl::class)
-//    wasmJs {
-//        browser()
-//        nodejs()
-//        d8()
-//    }
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        browser()
+        nodejs()
+        d8()
+    }
 
     sourceSets {
 
         commonMain {
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                implementation("io.github.microutils:kotlin-logging:_")
+                implementation("io.github.oshai:kotlin-logging:_")
                 implementation("io.ktor:ktor-client-logging:_")
                 implementation("io.ktor:ktor-serialization-kotlinx:_")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:_")
@@ -114,12 +114,12 @@ kotlin {
             }
         }
 
-//        wasmJsTest {
-//            dependencies {
-//                implementation(kotlin("test-wasm-js"))
-//                implementation("io.ktor:ktor-client-wasm:_")
-//            }
-//        }
+        wasmJsTest {
+            dependencies {
+                implementation(kotlin("test-wasm-js"))
+                implementation("io.ktor:ktor-client-js-wasm-js:_")
+            }
+        }
 
         all {
             languageSettings.optIn("kotlin.RequiresOptIn")

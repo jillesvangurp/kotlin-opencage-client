@@ -2,15 +2,16 @@ package com.jillesvangurp.kotlinopencage
 
 import com.jillesvangurp.geojson.latitude
 import com.jillesvangurp.geojson.longitude
+import io.github.oshai.kotlinlogging.KotlinLogging.logger
 import io.kotest.matchers.doubles.shouldBeGreaterThan
 import io.kotest.matchers.doubles.shouldBeLessThan
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.longs.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import kotlin.test.Test
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
-import kotlin.test.Test
 
 class OpenCageTest {
     val client by lazy {
