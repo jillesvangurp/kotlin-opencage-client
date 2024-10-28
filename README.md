@@ -139,8 +139,8 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
   ],
   "rate": {
     "limit": 2500,
-    "remaining": 2485,
-    "reset": 1727222400
+    "remaining": 2497,
+    "reset": 1730160000
   },
   "results": [
     {
@@ -210,24 +210,24 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
         },
         "sun": {
           "rise": {
-            "apparent": 1727153820,
-            "astronomical": 1727146860,
-            "civil": 1727151780,
-            "nautical": 1727149380
+            "apparent": 1730095020,
+            "astronomical": 1730088120,
+            "civil": 1730092860,
+            "nautical": 1730090460
           },
           "set": {
-            "apparent": 1727197080,
-            "astronomical": 1727204040,
-            "civil": 1727199120,
-            "nautical": 1727201520
+            "apparent": 1730130180,
+            "astronomical": 1730137080,
+            "civil": 1730132280,
+            "nautical": 1730134680
           }
         },
         "timezone": {
           "name": "Europe/Berlin",
-          "now_in_dst": 1,
-          "offset_sec": 7200,
-          "offset_string": "+0200",
-          "short_name": "CEST"
+          "now_in_dst": 0,
+          "offset_sec": 3600,
+          "offset_string": "+0100",
+          "short_name": "CET"
         },
         "what3words": {
           "words": "crunch.oven.arming"
@@ -287,8 +287,8 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
   },
   "thanks": "For using an OpenCage API",
   "timestamp": {
-    "created_http": "Tue, 24 Sep 2024 06:28:13 GMT",
-    "created_unix": 1727159293
+    "created_http": "Mon, 28 Oct 2024 07:46:22 GMT",
+    "created_unix": 1730101582
   },
   "total_results": 1
 }
