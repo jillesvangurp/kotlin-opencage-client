@@ -3,7 +3,9 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.dsl.jvm.JvmTargetValidationMode
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import java.net.URI
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     kotlin("multiplatform")
@@ -31,6 +33,10 @@ repositories {
 kotlin {
     jvm {
         // should work for android as well
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_11
+        }
     }
     js(IR) {
         nodejs {
@@ -122,22 +128,46 @@ kotlin {
         }
 
         all {
-            languageSettings.optIn("kotlin.RequiresOptIn")
+            languageSettings {
+                optIn("kotlin.RequiresOptIn")
+                optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
+                languageVersion = "1.9"
+                apiVersion = "1.9"
+            }
         }
     }
 }
 
-tasks.withType<KotlinJvmCompile> {
-    jvmTargetValidationMode.set(JvmTargetValidationMode.WARNING)
-
-    kotlinOptions {
-        // this is the minimum LTS version we support, 8 is no longer supported
-        jvmTarget = "11"
-        languageVersion = "2.0"
-    }
-}
-
 publishing {
+    publications {
+        withType<MavenPublication> {
+            pom {
+                url.set("https://github.com/jillesvangurp/kotlin-opencage-client")
+
+                licenses {
+                    license {
+                        name.set("MIT License")
+                        url.set("https://github.com/jillesvangurp/kotlin-opencage-client/blob/master/LICENSE")
+                    }
+                }
+
+                developers {
+                    developer {
+                        id.set("jillesvangurp")
+                        name.set("Jilles van Gurp")
+                        email.set("jilles@no-reply.github.com")
+                    }
+                }
+
+                scm {
+                    connection.set("scm:git:git://github.com/jillesvangurp/kotlin-opencage-client.git")
+                    developerConnection.set("scm:git:ssh://github.com:jillesvangurp/kotlin-opencage-client.git")
+                    url.set("https://github.com/jillesvangurp/kotlin-opencage-client")
+                }
+            }
+        }
+    }
+    
     repositories {
         maven {
             // GOOGLE_APPLICATION_CREDENTIALS env var must be set for this to work

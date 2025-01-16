@@ -139,8 +139,8 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
   ],
   "rate": {
     "limit": 2500,
-    "remaining": 2492,
-    "reset": 1730160000
+    "remaining": 2489,
+    "reset": 1737072000
   },
   "results": [
     {
@@ -210,16 +210,16 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
         },
         "sun": {
           "rise": {
-            "apparent": 1730095020,
-            "astronomical": 1730088120,
-            "civil": 1730092860,
-            "nautical": 1730090460
+            "apparent": 1737011400,
+            "astronomical": 1737004020,
+            "civil": 1737009000,
+            "nautical": 1737006420
           },
           "set": {
-            "apparent": 1730130180,
-            "astronomical": 1730137080,
-            "civil": 1730132280,
-            "nautical": 1730134680
+            "apparent": 1737040980,
+            "astronomical": 1737048360,
+            "civil": 1737043380,
+            "nautical": 1737045960
           }
         },
         "timezone": {
@@ -287,8 +287,8 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
   },
   "thanks": "For using an OpenCage API",
   "timestamp": {
-    "created_http": "Mon, 28 Oct 2024 08:00:19 GMT",
-    "created_unix": 1730102419
+    "created_http": "Thu, 16 Jan 2025 13:18:36 GMT",
+    "created_unix": 1737033516
   },
   "total_results": 1
 }

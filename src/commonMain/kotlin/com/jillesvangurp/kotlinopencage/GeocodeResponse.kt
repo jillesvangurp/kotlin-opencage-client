@@ -46,8 +46,8 @@ typealias OpencageGeometry=JsonObject
 
 val OpencageGeometry.asBounds: BoundingBox? get() {
     return  this["bounds"]?.jsonObject?.let { bounds ->
-        val northEast = this.getPoint("northeast") ?: error("missing northeast in bounds")
-        val southWest = this.getPoint("southwest") ?: error("missing southwest in bounds")
+        val northEast = bounds.getPoint("northeast") ?: error("missing northeast in bounds")
+        val southWest = bounds.getPoint("southwest") ?: error("missing southwest in bounds")
 
         // Geojson bbox convention of min long, min lat followed by max lon, max lat
         doubleArrayOf(
