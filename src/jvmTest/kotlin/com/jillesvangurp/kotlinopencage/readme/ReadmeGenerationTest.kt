@@ -10,9 +10,6 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.jsonPrimitive
-import kotlinx.serialization.json.long
 import kotlin.test.Test
 import java.io.File
 
@@ -74,7 +71,7 @@ val readmeMd = sourceGitRepository.md {
                     println("confidence: ${best.confidence}")
 
                     // extract the point and construct a geojson.io link
-                    println(best.geometry?.asPoint?.geoJsonIOUrl)
+                    println(best.geometry?.geoJsonIOUrl)
                 }
             }.let {
                 +"""

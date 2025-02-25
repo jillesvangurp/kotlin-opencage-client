@@ -2,7 +2,6 @@ package com.jillesvangurp.kotlinopencage
 
 import com.jillesvangurp.geojson.latitude
 import com.jillesvangurp.geojson.longitude
-import io.github.oshai.kotlinlogging.KotlinLogging.logger
 import io.kotest.matchers.doubles.shouldBeGreaterThan
 import io.kotest.matchers.doubles.shouldBeLessThan
 import io.kotest.matchers.ints.shouldBeGreaterThan
@@ -11,7 +10,6 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import kotlin.test.Test
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.encodeToString
 
 class OpenCageTest {
     val client by lazy {
@@ -30,10 +28,10 @@ class OpenCageTest {
                     it.components?.road?.startsWith("Watt") == true
                 }?.also {wattStr ->
                     wattStr.components?.city shouldBe "Berlin"
-                    wattStr.geometry?.asPoint?.coordinates?.longitude!! shouldBeGreaterThan 13.0
-                    wattStr.geometry?.asPoint?.coordinates?.longitude!! shouldBeLessThan 14.0
-                    wattStr.geometry?.asPoint?.coordinates?.latitude!! shouldBeGreaterThan 52.0
-                    wattStr.geometry?.asPoint?.coordinates?.latitude!! shouldBeLessThan 53.0
+                    wattStr.geometry?.coordinates?.longitude!! shouldBeGreaterThan 13.0
+                    wattStr.geometry?.coordinates?.longitude!! shouldBeLessThan 14.0
+                    wattStr.geometry?.coordinates?.latitude!! shouldBeGreaterThan 52.0
+                    wattStr.geometry?.coordinates?.latitude!! shouldBeLessThan 53.0
                 } shouldNotBe null
             }
         }

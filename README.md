@@ -71,7 +71,7 @@ response.results.first().let {best ->
   println("confidence: ${best.confidence}")
 
   // extract the point and construct a geojson.io link
-  println(best.geometry?.asPoint?.geoJsonIOUrl)
+  println(best.geometry?.geoJsonIOUrl)
 }
 ```
 
@@ -139,8 +139,8 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
   ],
   "rate": {
     "limit": 2500,
-    "remaining": 2489,
-    "reset": 1737072000
+    "remaining": 2493,
+    "reset": 1740528000
   },
   "results": [
     {
@@ -210,16 +210,16 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
         },
         "sun": {
           "rise": {
-            "apparent": 1737011400,
-            "astronomical": 1737004020,
-            "civil": 1737009000,
-            "nautical": 1737006420
+            "apparent": 1740463320,
+            "astronomical": 1740456540,
+            "civil": 1740461280,
+            "nautical": 1740458940
           },
           "set": {
-            "apparent": 1737040980,
-            "astronomical": 1737048360,
-            "civil": 1737043380,
-            "nautical": 1737045960
+            "apparent": 1740501420,
+            "astronomical": 1740508260,
+            "civil": 1740503520,
+            "nautical": 1740505860
           }
         },
         "timezone": {
@@ -287,8 +287,8 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
   },
   "thanks": "For using an OpenCage API",
   "timestamp": {
-    "created_http": "Thu, 16 Jan 2025 13:18:36 GMT",
-    "created_unix": 1737033516
+    "created_http": "Tue, 25 Feb 2025 16:40:16 GMT",
+    "created_unix": 1740501616
   },
   "total_results": 1
 }

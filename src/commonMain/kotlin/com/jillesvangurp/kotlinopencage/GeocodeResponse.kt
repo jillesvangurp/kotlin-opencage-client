@@ -30,22 +30,15 @@ data class GeocodeResult(
     @SerialName("distance_from_q")
     val distanceFromQ: Distance,
     val formatted: String,
-    val geometry: OpencageGeometry?,
     val components: Components?,
     val annotations: Annotations?,
-)
-
-@Serializable
-data class Distance(val meters: Long)
-
-/**
- * Either a point or bounds. use [asPoint] or [asBounds] to get these as a geojson point or bbox.
- */
-typealias OpencageGeometry=JsonObject
-
-
-val OpencageGeometry.asBounds: BoundingBox? get() {
-    return  this["bounds"]?.jsonObject?.let { bounds ->
+    // keep it private so we can properly pick it apart
+    @SerialName("geometry")
+    private val _geometry: JsonObject?,
+    @SerialName("bounds")
+    private val _bounds: JsonObject?
+) {
+    val bounds: BoundingBox? get() = _bounds?.let { bounds ->
         val northEast = bounds.getPoint("northeast") ?: error("missing northeast in bounds")
         val southWest = bounds.getPoint("southwest") ?: error("missing southwest in bounds")
 
@@ -57,7 +50,13 @@ val OpencageGeometry.asBounds: BoundingBox? get() {
             max(northEast.coordinates!!.latitude, southWest.coordinates!!.latitude),
         )
     }
+
+    // assumed to always be a point for now
+    val geometry get() = _geometry.asPoint
 }
+
+@Serializable
+data class Distance(val meters: Long)
 
 @Serializable
 data class Components(
