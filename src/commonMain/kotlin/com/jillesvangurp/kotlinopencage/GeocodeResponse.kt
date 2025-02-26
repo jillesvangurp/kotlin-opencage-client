@@ -28,7 +28,7 @@ val GeocodeResponse.totalResults get() = this.getLong("total_results") ?: error(
 data class GeocodeResult(
     val confidence: Double,
     @SerialName("distance_from_q")
-    val distanceFromQ: Distance,
+    val distanceFromQ: Distance?,
     val formatted: String,
     val components: Components?,
     val annotations: Annotations?,
