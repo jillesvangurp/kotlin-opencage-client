@@ -4,12 +4,15 @@ import com.jillesvangurp.geojson.BoundingBox
 import com.jillesvangurp.geojson.Geometry
 import com.jillesvangurp.geojson.latitude
 import com.jillesvangurp.geojson.longitude
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.serialization.kotlinx.json.*
+
+private val logger = KotlinLogging.logger {  }
 
 class OpencageClient(
     private val apiKey: String,
@@ -110,11 +113,19 @@ class OpencageClient(
                 }
             }
         }
-        if(response.status.value < 300) {
+        val responseBody = response.bodyAsText()
+        return if(response.status.value < 300) {
             // OKish
-            return DEFAULT_JSON.decodeFromString<GeocodeResponse>(response.bodyAsText())
+            try {
+                 DEFAULT_JSON.decodeFromString<GeocodeResponse>(responseBody)
+            } catch (e: Exception) {
+                logger.error(e) {
+                    "Error parsing: ${e.message}\n$responseBody"
+                }
+                error("parse error in response")
+            }
         } else {
-            val responseBody = response.bodyAsText()
+
             when(response.status.value) {
                 400 -> throw BadRequestException(responseBody)
                 401 -> throw KeyException(responseBody)
@@ -122,10 +133,16 @@ class OpencageClient(
                 403 -> throw ForbiddenException(responseBody)
                 408 -> throw TimeoutException(responseBody)
                 429 -> throw TooManyRequestsException(responseBody)
-                404,405,410,426 -> error("client bug, server returned ${response.status}: $responseBody")
-                // if this persists, maybe contact opencage support
+                404,405,410,426 -> {
+                    // if this persists, maybe contact opencage support
+                    logger.error { "unexpected error ${response.status}: $responseBody" }
+                    error("client bug, server returned ${response.status}: $responseBody")
+                }
                 500,503 -> error("server error: ${response.status}: $responseBody")
-                else -> error("Unexpected status: ${response.status}: $responseBody")
+                else -> {
+                    logger.error { "unexpected error ${response.status}: $responseBody" }
+                    error("Unexpected status: ${response.status}: $responseBody")
+                }
             }
         }
     }
