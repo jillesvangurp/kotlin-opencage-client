@@ -1,8 +1,5 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
-import org.jetbrains.kotlin.gradle.dsl.jvm.JvmTargetValidationMode
-import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
-import java.net.URI
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -35,10 +32,10 @@ kotlin {
         // should work for android as well
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
-            jvmTarget = JvmTarget.JVM_11
+            jvmTarget = JvmTarget.JVM_21
         }
     }
-    js(IR) {
+    js {
         nodejs {
             testTask {
                 useMocha {
@@ -51,10 +48,8 @@ kotlin {
     linuxX64()
     linuxArm64()
     mingwX64()
-    macosX64()
     macosArm64()
     iosArm64()
-    iosX64()
     // blocked on ktor-client wasm support
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
@@ -67,7 +62,6 @@ kotlin {
 
         commonMain {
             dependencies {
-                implementation(kotlin("stdlib-common"))
                 implementation("io.github.oshai:kotlin-logging:_")
                 implementation("io.ktor:ktor-client-logging:_")
                 implementation("io.ktor:ktor-serialization-kotlinx:_")
@@ -81,16 +75,13 @@ kotlin {
 
         commonTest {
             dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
+                implementation(kotlin("test"))
                 implementation("io.kotest:kotest-assertions-core:_")
             }
         }
 
         jvmMain  {
             dependencies {
-                implementation(kotlin("stdlib-jdk8"))
-
             }
         }
         jvmTest {
@@ -109,20 +100,19 @@ kotlin {
 
         jsMain  {
             dependencies {
-                implementation(kotlin("stdlib-js"))
             }
         }
 
         jsTest  {
             dependencies {
-                implementation(kotlin("test-js"))
+                implementation(kotlin("test"))
                 implementation("io.ktor:ktor-client-js:_")
             }
         }
 
         wasmJsTest {
             dependencies {
-                implementation(kotlin("test-wasm-js"))
+                implementation(kotlin("test"))
                 implementation("io.ktor:ktor-client-js-wasm-js:_")
             }
         }
@@ -228,6 +218,3 @@ tasks.withType<Test> {
         }
     })
 }
-
-
-
