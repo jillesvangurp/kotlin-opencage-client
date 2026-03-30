@@ -82,10 +82,10 @@ This produces the following output.
 
 ```text
 Found 1
-Wattstraße 11, 13355 Berlin, Germany
-Components(iso3166TwoLetterCode=DE, iso3166ThreeLetterCode=DEU, countryWithSubdivision=[DE-BE], category=building, normalizedCity=Berlin, type=null, city=Berlin, continent=Europe, country=Germany, countryCode=de, houseNumber=11, postcode=13355, borrow=null, neighbourhood=Brunnenviertel, politicalUnion=European Union, restaurant=null, road=Wattstraße, state=Berlin, stateCode=BE, suburb=Gesundbrunnen)
-confidence: 10.0
-https://geojson.io/#data=data%3Aapplication%2Fjson%2C%7B%22features%22%3A%5B%7B%22geometry%22%3A%7B%22type%22%3A%22Point%22%2C%22coordinates%22%3A%5B13.3905952%2C52.5412642%5D%7D%2C%22type%22%3A%22Feature%22%7D%5D%2C%22type%22%3A%22FeatureCollection%22%7D
+Ahoy! Berlin, Wattstraße 11, 13355 Berlin, Germany
+Components(iso3166TwoLetterCode=DE, iso3166ThreeLetterCode=DEU, countryWithSubdivision=[DE-BE], category=commerce, normalizedCity=Berlin, type=null, city=Berlin, continent=Europe, country=Germany, countryCode=de, houseNumber=11, postcode=13355, borrow=null, neighbourhood=Brunnenviertel, politicalUnion=European Union, restaurant=null, road=Wattstraße, state=Berlin, stateCode=BE, suburb=Gesundbrunnen)
+confidence: 9.0
+https://geojson.io/#data=data%3Aapplication%2Fjson%2C%7B%22features%22%3A%5B%7B%22geometry%22%3A%7B%22coordinates%22%3A%5B13.3906028%2C52.5412201%5D%2C%22type%22%3A%22Point%22%7D%2C%22type%22%3A%22Feature%22%7D%5D%2C%22type%22%3A%22FeatureCollection%22%7D
 ```
 
 The client depends on my [geogeometry](https://github.com/jillesvangurp/geogeometry) library,
@@ -137,23 +137,18 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
       "url": "https://opencagedata.com/credits"
     }
   ],
-  "rate": {
-    "limit": 2500,
-    "remaining": 2489,
-    "reset": 1740614400
-  },
   "results": [
     {
       "annotations": {
         "DMS": {
-          "lat": "52° 32' 28.55112'' N",
-          "lng": "13° 23' 26.14272'' E"
+          "lat": "52° 32' 28.39236'' N",
+          "lng": "13° 23' 26.17008'' E"
         },
-        "MGRS": "33UUU9085422458",
+        "MGRS": "33UUU9085522453",
         "Maidenhead": "JO62qm69uv",
         "Mercator": {
-          "x": 1490634.245,
-          "y": 6864650.095
+          "x": 1490635.085,
+          "y": 6864642.052
         },
         "NUTS": {
           "NUTS0": {
@@ -170,9 +165,9 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
           }
         },
         "OSM": {
-          "edit_url": "https://www.openstreetmap.org/edit?relation=1505873#map=17/52.54126/13.39060",
-          "note_url": "https://www.openstreetmap.org/note/new#map=17/52.54126/13.39060&layers=N",
-          "url": "https://www.openstreetmap.org/?mlat=52.54126&mlon=13.39060#map=17/52.54126/13.39060"
+          "edit_url": "https://www.openstreetmap.org/edit?node=5103564057#map=16/52.54122/13.39060",
+          "note_url": "https://www.openstreetmap.org/note/new#map=16/52.54122/13.39060&layers=N",
+          "url": "https://www.openstreetmap.org/?mlat=52.54122&mlon=13.39060#map=16/52.54122/13.39060"
         },
         "UN_M49": {
           "regions": {
@@ -201,7 +196,7 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
           "thousands_separator": "."
         },
         "flag": "🇩🇪",
-        "geohash": "u33dbsyep3x8bjhghnk0",
+        "geohash": "u33dbsydz9m4hkd87b8c",
         "qibla": 136.68,
         "roadinfo": {
           "drive_on": "right",
@@ -210,37 +205,37 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
         },
         "sun": {
           "rise": {
-            "apparent": 1740549600,
-            "astronomical": 1740542820,
-            "civil": 1740547560,
-            "nautical": 1740545160
+            "apparent": 1774845960,
+            "astronomical": 1774838700,
+            "civil": 1774843860,
+            "nautical": 1774841400
           },
           "set": {
-            "apparent": 1740587940,
-            "astronomical": 1740594780,
-            "civil": 1740590040,
-            "nautical": 1740592380
+            "apparent": 1774892220,
+            "astronomical": 1774899480,
+            "civil": 1774894320,
+            "nautical": 1774896840
           }
         },
         "timezone": {
           "name": "Europe/Berlin",
-          "now_in_dst": 0,
-          "offset_sec": 3600,
-          "offset_string": "+0100",
-          "short_name": "CET"
+          "now_in_dst": 1,
+          "offset_sec": 7200,
+          "offset_string": "+0200",
+          "short_name": "CEST"
         },
         "what3words": {
-          "words": "crunch.oven.arming"
+          "words": "pressing.survivor.miss"
         }
       },
       "bounds": {
         "northeast": {
-          "lat": 52.5414917,
-          "lng": 13.3911419
+          "lat": 52.5412701,
+          "lng": 13.3906528
         },
         "southwest": {
-          "lat": 52.5410011,
-          "lng": 13.3903603
+          "lat": 52.5411701,
+          "lng": 13.3905528
         }
       },
       "components": {
@@ -249,31 +244,33 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
         "ISO_3166-2": [
           "DE-BE"
         ],
-        "_category": "building",
+        "_category": "commerce",
         "_normalized_city": "Berlin",
-        "_type": "building",
+        "_type": "coworking_space",
         "borough": "Mitte",
         "city": "Berlin",
         "continent": "Europe",
         "country": "Germany",
         "country_code": "de",
+        "coworking_space": "Ahoy! Berlin",
         "house_number": "11",
         "neighbourhood": "Brunnenviertel",
         "political_union": "European Union",
         "postcode": "13355",
+        "quarter": "Brunnenviertel",
         "road": "Wattstraße",
         "state": "Berlin",
         "state_code": "BE",
         "suburb": "Gesundbrunnen"
       },
-      "confidence": 10,
+      "confidence": 9,
       "distance_from_q": {
-        "meters": 11
+        "meters": 12
       },
-      "formatted": "Wattstraße 11, 13355 Berlin, Germany",
+      "formatted": "Ahoy! Berlin, Wattstraße 11, 13355 Berlin, Germany",
       "geometry": {
-        "lat": 52.5412642,
-        "lng": 13.3905952
+        "lat": 52.5412201,
+        "lng": 13.3906028
       }
     }
   ],
@@ -287,8 +284,8 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
   },
   "thanks": "For using an OpenCage API",
   "timestamp": {
-    "created_http": "Wed, 26 Feb 2025 15:14:52 GMT",
-    "created_unix": 1740582892
+    "created_http": "Mon, 30 Mar 2026 14:14:10 GMT",
+    "created_unix": 1774880050
   },
   "total_results": 1
 }
@@ -307,7 +304,7 @@ println(annotations.getDouble("bounds","northeast","lat"))
 
 ```json
 🇩🇪
-crunch.oven.arming
+pressing.survivor.miss
 null
 ```
 

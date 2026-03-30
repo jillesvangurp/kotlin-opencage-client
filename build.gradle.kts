@@ -131,8 +131,8 @@ kotlin {
             languageSettings {
                 optIn("kotlin.RequiresOptIn")
                 optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
-                languageVersion = "1.9"
-                apiVersion = "1.9"
+                languageVersion = "2.1"
+                apiVersion = "2.1"
             }
         }
     }
@@ -167,7 +167,7 @@ publishing {
             }
         }
     }
-    
+
     repositories {
         maven {
             // GOOGLE_APPLICATION_CREDENTIALS env var must be set for this to work
