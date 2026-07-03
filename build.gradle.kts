@@ -121,8 +121,8 @@ kotlin {
             languageSettings {
                 optIn("kotlin.RequiresOptIn")
                 optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
-                languageVersion = "2.1"
-                apiVersion = "2.1"
+                languageVersion = "2.2"
+                apiVersion = "2.2"
             }
         }
     }
@@ -177,6 +177,7 @@ tasks.withType<Test> {
     // executes tests inside a class concurrently
     systemProperties["junit.jupiter.execution.parallel.mode.classes.default"] = "concurrent"
     systemProperties["junit.jupiter.execution.parallel.config.strategy"] = "dynamic"
+    systemProperties["junit.jupiter.execution.parallel.config.executor-service"] = "WORKER_THREAD_POOL"
     // random order of test class execution
     systemProperties["junit.jupiter.testclass.order.default"] = "org.junit.jupiter.api.ClassOrderer\$Random"
 

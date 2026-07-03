@@ -1,12 +1,13 @@
 package com.jillesvangurp.kotlinopencage
 
 import com.jillesvangurp.geojson.*
-import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.*
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 typealias GeocodeResponse = JsonObject
 
@@ -99,6 +100,7 @@ data class Timestamp(
     val createdUnix: Long
 )
 
+@OptIn(ExperimentalTime::class)
 val Timestamp.instant get() = Instant.fromEpochSeconds(createdUnix)
 
 @Serializable
@@ -115,4 +117,5 @@ data class Rate(
     val resetEpoch: Long?
 )
 
+@OptIn(ExperimentalTime::class)
 val Rate.resetTime get() = resetEpoch?.let { Instant.fromEpochSeconds(it) }
