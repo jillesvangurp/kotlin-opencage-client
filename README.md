@@ -2,14 +2,15 @@
 
 [![Process Pull Request](https://github.com/jillesvangurp/kotlin-opencage-client/actions/workflows/pr_master.yaml/badge.svg)](https://github.com/jillesvangurp/kotlin-opencage-client/actions/workflows/pr_master.yaml)
 
-Kotlin multi-platform client for the [Opencage](https://opencagedata.com/) geocoding API.
+Kotlin multiplatform client for the [OpenCage](https://opencagedata.com/) geocoding and geosearch APIs.
 
 ## Features
 
 - Geocode and reverse geocode using the Opencage API
+- Search for place and postcode suggestions using the geosearch service.
 - Kotlin friendly API and data classes that model the response.
-- Forward compatible with features that OpenCage adds; anyhting new and unsupported can be accessed via the raw response in `JsonObject` form. Any new unsupported request parameters may be added via an optional parameter that takes a map.
-- Works on all Kotlin platforms. Built around ktor client and kotinx.serialization which work on all Kotlin platforms: jvm, mobile (android/ios), native (windows, linux, mac) and soon web assembly.
+- Access unknown response fields through raw `JsonObject` values and pass new parameters through `additionalRequestParams`.
+- Built with Ktor and kotlinx.serialization for JVM, JavaScript, WebAssembly, and native targets.
 
 ## Gradle
 
@@ -33,8 +34,24 @@ And then you can add the dependency:
 
 ```kotlin
     // check the latest release tag for the latest version
-    implementation("com.jillesvangurp:kotlin-opencage-client:1.x.y")
+    implementation("com.jillesvangurp:kotlin-opencage-client:2.0.0")
 ```
+
+## API coverage reviewed November 2026
+
+- `GeosearchClient` supports place and postcode suggestions, bounds, country filters, language, proximity, and type inclusion/exclusion. It uses a separate geosearch key and endpoint. See the [official geosearch client documentation](https://github.com/OpenCageData/geosearch), [proximity update](https://blog.opencagedata.com/post/geosearch-improvements), and [type-filtering update](https://blog.opencagedata.com/post/geosearch-with-type-filtering).
+- Geocoding accepts [DIGIPIN queries](https://blog.opencagedata.com/post/digipin-support) through `geocode(q = "32C-849-5CKC")`. Read the identifier from `components.digipin` or `annotations.digipin`.
+- `annotations.roadInfo` exposes [the extended road fields](https://blog.opencagedata.com/post/more-roadinfo-maxspeed-data), including bus/HGV speed limits, conditional and variable limits, minimum speeds, and tunnel information. Speeds and dimensions are strings so numeric and textual values are preserved. Road data is crowdsourced and may be incomplete or outdated.
+- `annotations.nuts` exposes NUTS region codes. [OpenCage's dataset update](https://blog.opencagedata.com/post/nuts-2024-data) requires no new request parameter.
+- Geocoding now has a `pretty` option, typed response `status`, and access to the optional `request` metadata returned with `addRequest = true`.
+
+The [current geocoding API](https://opencagedata.com/api) still uses `/geocode/v1/json`. UN/LOCODE queries such as `LOCODE:DEBRV` already work through `geocode`. Annotations and the complete response remain accessible as JSON for fields added in the future. OpenCage's spreadsheet-upload service is documented as a dashboard feature, so this client does not invent an upload endpoint.
+
+### Compatibility notes
+
+`response.rate` is now nullable: subscription responses do not contain rate limits. Use `response.rate?.remaining`. `components.type` now reads the API's `_type` field, and `components.borough` replaces the misspelled `borrow` property, which remains as a deprecated alias. Additional address fields include town, village, municipality, county, city/state district, and road type.
+
+The new `pretty` argument is appended after `additionalRequestParams`, preserving existing positional source calls. Recompile applications against this release because public method and data-class signatures have changed.
 
 ## Examples
 
@@ -83,7 +100,7 @@ This produces the following output.
 ```text
 Found 1
 Ahoy! Berlin, Wattstraße 11, 13355 Berlin, Germany
-Components(iso3166TwoLetterCode=DE, iso3166ThreeLetterCode=DEU, countryWithSubdivision=[DE-BE], category=commerce, normalizedCity=Berlin, type=null, city=Berlin, continent=Europe, country=Germany, countryCode=de, houseNumber=11, postcode=13355, borrow=null, neighbourhood=Brunnenviertel, politicalUnion=European Union, restaurant=null, road=Wattstraße, state=Berlin, stateCode=BE, suburb=Gesundbrunnen)
+Components(iso3166TwoLetterCode=DE, iso3166ThreeLetterCode=DEU, countryWithSubdivision=[DE-BE], category=commerce, normalizedCity=Berlin, type=coworking_space, city=Berlin, continent=Europe, country=Germany, countryCode=de, houseNumber=11, postcode=13355, borrow=Mitte, neighbourhood=Brunnenviertel, politicalUnion=European Union, restaurant=null, road=Wattstraße, state=Berlin, stateCode=BE, suburb=Gesundbrunnen, town=null, village=null, municipality=null, county=null, countyCode=null, stateDistrict=null, cityDistrict=null, roadType=null, digipin=null)
 confidence: 9.0
 https://geojson.io/#data=data%3Aapplication%2Fjson%2C%7B%22features%22%3A%5B%7B%22geometry%22%3A%7B%22coordinates%22%3A%5B13.3906028%2C52.5412201%5D%2C%22type%22%3A%22Point%22%7D%2C%22type%22%3A%22Feature%22%7D%5D%2C%22type%22%3A%22FeatureCollection%22%7D
 ```
@@ -165,9 +182,9 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
           }
         },
         "OSM": {
-          "edit_url": "https://www.openstreetmap.org/edit?node=5103564057#map=16/52.54122/13.39060",
-          "note_url": "https://www.openstreetmap.org/note/new#map=16/52.54122/13.39060&layers=N",
-          "url": "https://www.openstreetmap.org/?mlat=52.54122&mlon=13.39060#map=16/52.54122/13.39060"
+          "edit_url": "https://www.openstreetmap.org/edit?node=5103564057#map=17/52.54122/13.39060",
+          "note_url": "https://www.openstreetmap.org/note/new#map=17/52.54122/13.39060&layers=N",
+          "url": "https://www.openstreetmap.org/?mlat=52.54122&mlon=13.39060#map=17/52.54122/13.39060"
         },
         "UN_M49": {
           "regions": {
@@ -205,24 +222,24 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
         },
         "sun": {
           "rise": {
-            "apparent": 1774845960,
-            "astronomical": 1774838700,
-            "civil": 1774843860,
-            "nautical": 1774841400
+            "apparent": 1794464580,
+            "astronomical": 1794457440,
+            "civil": 1794462300,
+            "nautical": 1794459840
           },
           "set": {
-            "apparent": 1774892220,
-            "astronomical": 1774899480,
-            "civil": 1774894320,
-            "nautical": 1774896840
+            "apparent": 1794496680,
+            "astronomical": 1794503820,
+            "civil": 1794498900,
+            "nautical": 1794501420
           }
         },
         "timezone": {
           "name": "Europe/Berlin",
-          "now_in_dst": 1,
-          "offset_sec": 7200,
-          "offset_string": "+0200",
-          "short_name": "CEST"
+          "now_in_dst": 0,
+          "offset_sec": 3600,
+          "offset_string": "+0100",
+          "short_name": "CET"
         },
         "what3words": {
           "words": "pressing.survivor.miss"
@@ -284,8 +301,8 @@ println(DEFAULT_PRETTY_JSON.encodeToString(response))
   },
   "thanks": "For using an OpenCage API",
   "timestamp": {
-    "created_http": "Mon, 30 Mar 2026 14:14:10 GMT",
-    "created_unix": 1774880050
+    "created_http": "Thu, 12 Nov 2026 14:17:58 GMT",
+    "created_unix": 1794493078
   },
   "total_results": 1
 }
@@ -306,6 +323,44 @@ println(annotations.getDouble("bounds","northeast","lat"))
 🇩🇪
 pressing.survivor.miss
 null
+```
+
+### DIGIPIN and road information
+
+Pass a DIGIPIN directly as the query. Road annotations expose speed limits as strings because the API can return numbers or values such as `none`. All fields are optional.
+
+```kotlin
+val response = client.geocode("32C-849-5CKC")
+println(response.results.first().components?.digipin)
+println(response.results.first().annotations?.digipin)
+
+val road = client.geocode("52.54125,13.39077", roadinfo = true)
+  .results.first().annotations?.roadInfo
+println(road?.maxSpeedHgv)
+println(road?.maxSpeedHgvConditional)
+println(road?.tunnelName)
+```
+
+### Geosearch autosuggest
+
+Use a separate geosearch key configured for your domain. The client sends it in the `OpenCage-Geosearch-Key` header. Debounce searches in your UI; the official widget starts searching at three characters.
+
+```kotlin
+val searchClient = GeosearchClient(apiKey = "oc_gs_YOUR_KEY")
+try {
+  val suggestions = searchClient.search(
+    q = "Berl",
+    countryCode = "de,at,ch",
+    language = "de",
+    type = "city,postcode",
+    limit = 5,
+  )
+  suggestions.results.forEach { println("${it.name}: ${it.formatted}") }
+  // Use type = "!village" to exclude villages.
+  // The full JSON is available as suggestions.raw.
+} finally {
+  searchClient.close()
+}
 ```
 
 ### Customizing ktor client & selecting a client implementation
@@ -355,13 +410,19 @@ val client = OpencageClient(
 
 ## Multi platform
 
-This is a Kotlin multi platform library that should work on most  kotlin platforms (jvm, js, ios, android, etc). Wasm will be added later, after Kotlin 2.0 stabilizes.
+Configured targets are JVM (Java 21 bytecode), JavaScript, Wasm JS, Linux x64/ARM64, Windows x64, macOS ARM64, and iOS ARM64. Choose a Ktor HTTP engine for your platform. CI uses Java 25 LTS. JavaScript and Wasm Node tests use Node 26 LTS.
+
+Wasm runs in browsers and Node.js. The standalone D8 test runner cannot resolve the npm modules used by the dependencies, such as `@js-joda/core`, so it is not configured.
 
 ## Development
 
-To run the tests, you need to configure a valid Opencage API key. You can get one from opencage and they also provide special keys for testing. 
+The common API-contract tests use Ktor's mock engine and need no key or network access. Run them on JVM with `./gradlew jvmTest --tests '*ApiContractTest' --tests '*ResponseTest'`, or on JavaScript with `./gradlew jsNodeTest`.
+
+The live geocoding tests and README generation need a valid OpenCage geocoding key. The special test key documented by OpenCage returns a fixed location and does not satisfy the live Berlin-address assertions.
 
 To configure this either set the `OPENCAGE_KEY` environment variable, supply a `local.properties` file with the `opencageApiKey` property, or set the `opencageApiKey` system property. Any of those should work.
+
+Dependency, Kotlin plugin, and Node.js versions are managed in `gradle/libs.versions.toml`. Gradle itself is pinned in `gradle/wrapper/gradle-wrapper.properties`.
 
 Run `./gradlew build` to build. The project should load fine in recent versions of Intellij (community edition).
 

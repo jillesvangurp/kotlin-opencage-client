@@ -11,7 +11,6 @@ build
 out
 .kotlintest
 localRepo
-kotlin-js-store/
 .kotlin
 .DS_Store
 # to run the tests put your API KEY in here under the opencageApiKey and DONOT commit this

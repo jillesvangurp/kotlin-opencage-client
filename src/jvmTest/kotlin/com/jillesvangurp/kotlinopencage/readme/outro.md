@@ -1,12 +1,18 @@
 ## Multi platform
 
-This is a Kotlin multi platform library that should work on most  kotlin platforms (jvm, js, ios, android, etc). Wasm will be added later, after Kotlin 2.0 stabilizes.
+Configured targets are JVM (Java 21 bytecode), JavaScript, Wasm JS, Linux x64/ARM64, Windows x64, macOS ARM64, and iOS ARM64. Choose a Ktor HTTP engine for your platform. CI uses Java 25 LTS. JavaScript and Wasm Node tests use Node 26 LTS.
+
+Wasm runs in browsers and Node.js. The standalone D8 test runner cannot resolve the npm modules used by the dependencies, such as `@js-joda/core`, so it is not configured.
 
 ## Development
 
-To run the tests, you need to configure a valid Opencage API key. You can get one from opencage and they also provide special keys for testing. 
+The common API-contract tests use Ktor's mock engine and need no key or network access. Run them on JVM with `./gradlew jvmTest --tests '*ApiContractTest' --tests '*ResponseTest'`, or on JavaScript with `./gradlew jsNodeTest`.
+
+The live geocoding tests and README generation need a valid OpenCage geocoding key. The special test key documented by OpenCage returns a fixed location and does not satisfy the live Berlin-address assertions.
 
 To configure this either set the `OPENCAGE_KEY` environment variable, supply a `local.properties` file with the `opencageApiKey` property, or set the `opencageApiKey` system property. Any of those should work.
+
+Dependency, Kotlin plugin, and Node.js versions are managed in `gradle/libs.versions.toml`. Gradle itself is pinned in `gradle/wrapper/gradle-wrapper.properties`.
 
 Run `./gradlew build` to build. The project should load fine in recent versions of Intellij (community edition).
 

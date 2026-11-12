@@ -17,8 +17,7 @@ class OpenCageTest {
     val client by lazy {
         OpencageClient(
             apiKey = openCageKey,
-            // makes it easy to dig out responses from logs for debugging
-            logging = true
+            logging = false
         )
     }
 

@@ -3,11 +3,23 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsEnvSpec
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsPlugin
+import org.jetbrains.kotlin.gradle.targets.wasm.nodejs.WasmNodeJsEnvSpec
+import org.jetbrains.kotlin.gradle.targets.wasm.nodejs.WasmNodeJsPlugin
 
 plugins {
-    kotlin("multiplatform")
-    kotlin("plugin.serialization")
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
     `maven-publish`
+}
+
+val nodeVersion = libs.versions.node.get()
+plugins.withType<NodeJsPlugin> {
+    the<NodeJsEnvSpec>().version = nodeVersion
+}
+plugins.withType<WasmNodeJsPlugin> {
+    the<WasmNodeJsEnvSpec>().version = nodeVersion
 }
 
 repositories {
@@ -50,33 +62,34 @@ kotlin {
     mingwX64()
     macosArm64()
     iosArm64()
-    // blocked on ktor-client wasm support
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
+        // Ktor/datetime use npm modules that the standalone D8 shell cannot resolve.
         browser()
         nodejs()
-        d8()
     }
 
     sourceSets {
 
         commonMain {
             dependencies {
-                implementation("io.github.oshai:kotlin-logging:_")
-                implementation("io.ktor:ktor-client-logging:_")
-                implementation("io.ktor:ktor-serialization-kotlinx:_")
-                implementation("io.ktor:ktor-serialization-kotlinx-json:_")
-                implementation("io.ktor:ktor-client-content-negotiation:_")
-                implementation("com.github.jillesvangurp:geogeometry:_")
-                implementation(KotlinX.datetime)
+                implementation(libs.kotlin.logging)
+                implementation(libs.ktor.client.logging)
+                implementation(libs.ktor.serialization.kotlinx)
+                implementation(libs.ktor.serialization.kotlinx.json)
+                implementation(libs.ktor.client.content.negotiation)
+                implementation(libs.geogeometry)
+                implementation(libs.kotlinx.datetime)
 
             }
         }
 
         commonTest {
             dependencies {
-                implementation(kotlin("test"))
-                implementation("io.kotest:kotest-assertions-core:_")
+                implementation(libs.kotlin.test.common)
+                implementation(libs.kotest.assertions.core)
+                implementation(libs.ktor.client.mock)
+                implementation(libs.kotlinx.coroutines.test)
             }
         }
 
@@ -86,15 +99,15 @@ kotlin {
         }
         jvmTest {
             dependencies {
-                implementation(kotlin("test-junit5", "_"))
-                implementation(Testing.junit.jupiter.api)
-                implementation(Testing.junit.jupiter.engine)
+                implementation(libs.kotlin.test.junit5)
+                implementation(libs.junit.jupiter.api)
+                implementation(libs.junit.jupiter.engine)
 
-                implementation(Ktor.client.java)
-                implementation("com.github.jillesvangurp:kotlin4example:_")
+                implementation(libs.ktor.client.java)
+                implementation(libs.kotlin4example)
 
-                implementation("org.slf4j:jul-to-slf4j:_")
-                implementation("ch.qos.logback:logback-classic:_")
+                implementation(libs.slf4j.jul)
+                implementation(libs.logback.classic)
             }
         }
 
@@ -105,15 +118,15 @@ kotlin {
 
         jsTest  {
             dependencies {
-                implementation(kotlin("test"))
-                implementation("io.ktor:ktor-client-js:_")
+                implementation(libs.kotlin.test.common)
+                implementation(libs.ktor.client.js)
             }
         }
 
         wasmJsTest {
             dependencies {
-                implementation(kotlin("test"))
-                implementation("io.ktor:ktor-client-js-wasm-js:_")
+                implementation(libs.kotlin.test.common)
+                implementation(libs.ktor.client.wasm.js)
             }
         }
 
