@@ -13,7 +13,7 @@ import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 import java.io.File
 
-const val githubLink = "https://github.com/formation-res/pg-docstore"
+const val githubLink = "https://github.com/jillesvangurp/kotlin-opencage-client"
 
 val sourceGitRepository = SourceRepository(
     repoUrl = githubLink,
@@ -36,6 +36,7 @@ class ReadmeGenerationTest {
 
 val readmeMd = sourceGitRepository.md {
     includeMdFile("intro.md")
+    includeMdFile("api-updates.md")
     val client = OpencageClient(apiKey = openCageKey)
     section("Examples") {
         subSection("Create client") {
@@ -142,6 +143,40 @@ val readmeMd = sourceGitRepository.md {
                 println(annotations.getDouble("bounds","northeast","lat"))
             }.let {
                 mdCodeBlock(it.stdOut,"json", allowLongLines = true)
+            }
+        }
+        subSection("DIGIPIN and road information") {
+            +"Pass a DIGIPIN directly as the query. Road annotations expose speed limits as strings because the API can return numbers or values such as `none`. All fields are optional."
+            example(runExample = false) {
+                val response = client.geocode("32C-849-5CKC")
+                println(response.results.first().components?.digipin)
+                println(response.results.first().annotations?.digipin)
+
+                val road = client.geocode("52.54125,13.39077", roadinfo = true)
+                    .results.first().annotations?.roadInfo
+                println(road?.maxSpeedHgv)
+                println(road?.maxSpeedHgvConditional)
+                println(road?.tunnelName)
+            }
+        }
+        subSection("Geosearch autosuggest") {
+            +"Use a separate geosearch key configured for your domain. The client sends it in the `OpenCage-Geosearch-Key` header. Debounce searches in your UI; the official widget starts searching at three characters."
+            example(runExample = false) {
+                val searchClient = GeosearchClient(apiKey = "oc_gs_YOUR_KEY")
+                try {
+                    val suggestions = searchClient.search(
+                        q = "Berl",
+                        countryCode = "de,at,ch",
+                        language = "de",
+                        type = "city,postcode",
+                        limit = 5,
+                    )
+                    suggestions.results.forEach { println("${it.name}: ${it.formatted}") }
+                    // Use type = "!village" to exclude villages.
+                    // The full JSON is available as suggestions.raw.
+                } finally {
+                    searchClient.close()
+                }
             }
         }
         subSection("Customizing ktor client & selecting a client implementation") {

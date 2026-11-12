@@ -6,6 +6,7 @@ import com.jillesvangurp.geojson.latitude
 import com.jillesvangurp.geojson.longitude
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.*
+import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
@@ -35,7 +36,7 @@ class OpencageClient(
     }
 ) {
     /**
-     * Call the opencage geocode API with a query [q].
+     * Call the OpenCage geocoding API with an address, coordinates, DIGIPIN, or `LOCODE:` query [q].
      *
      *  - [bounds] Used only for forward geocoding. This value will restrict the possible results to a defined bounding box.
      *  - [countryCode] Used only for forward geocoding. Restricts results to the specified country/territory or countries.
@@ -50,6 +51,8 @@ class OpencageClient(
      *  - [noDedupe] When true, results will not be deduplicated.
      *  - [noRecord] When true, the query contents are not logged.
      *  - [roadinfo] When true, the behaviour of the geocoder is changed to attempt to match the nearest road (as opposed to address).
+     *
+     *  - [pretty] When true, the server formats the JSON for readability.
      *
      * Use [additionalRequestParams] to pass on any request parameters not supported by this client.
      * Refer to [Opencage API docs](https://opencagedata.com/api) for more information on supported parameters.
@@ -69,9 +72,11 @@ class OpencageClient(
         noDedupe: Boolean? = null,
         noRecord: Boolean? = null,
         roadinfo: Boolean? = null,
-        additionalRequestParams: Map<String, Any> = mapOf()
+        additionalRequestParams: Map<String, Any> = mapOf(),
+        pretty: Boolean? = null
     ): GeocodeResponse {
-        val response = httpClient.get("$baseUrl/v1/json") {
+        val response = httpClient.get("${baseUrl.trimEnd('/')}/v1/json") {
+            expectSuccess = false
             header("User-Agent","kotlin-opencage-client/1.0.0 (https://github.com/jillesvangurp/kotlin-opencage-client)")
             parameter("key", apiKey)
             parameter("q", q)
@@ -83,6 +88,7 @@ class OpencageClient(
                 noDedupe to "no_dedupe",
                 noRecord to "no_record",
                 roadinfo to "roadinfo",
+                pretty to "pretty",
             ).filter { (value,_) -> value==true }
                 .forEach { (_,param) ->
                 parameter(param,"1")
@@ -113,36 +119,38 @@ class OpencageClient(
                 }
             }
         }
-        val responseBody = response.bodyAsText()
-        return if(response.status.value < 300) {
-            // OKish
-            try {
-                 DEFAULT_JSON.decodeFromString<GeocodeResponse>(responseBody)
-            } catch (e: Exception) {
-                logger.error(e) {
-                    "Error parsing: ${e.message}\n$responseBody"
-                }
-                error("parse error in response")
-            }
-        } else {
+        return response.openCageResponse()
+    }
+}
 
-            when(response.status.value) {
-                400 -> throw BadRequestException(responseBody)
-                401 -> throw KeyException(responseBody)
-                402 -> throw QuotaException(responseBody)
-                403 -> throw ForbiddenException(responseBody)
-                408 -> throw TimeoutException(responseBody)
-                429 -> throw TooManyRequestsException(responseBody)
-                404,405,410,426 -> {
-                    // if this persists, maybe contact opencage support
-                    logger.error { "unexpected error ${response.status}: $responseBody" }
-                    error("client bug, server returned ${response.status}: $responseBody")
-                }
-                500,503 -> error("server error: ${response.status}: $responseBody")
-                else -> {
-                    logger.error { "unexpected error ${response.status}: $responseBody" }
-                    error("Unexpected status: ${response.status}: $responseBody")
-                }
+internal suspend fun HttpResponse.openCageResponse(): GeocodeResponse {
+    val responseBody = bodyAsText()
+    return if (status.value in 200..299) {
+        try {
+            DEFAULT_JSON.decodeFromString<GeocodeResponse>(responseBody)
+        } catch (e: Exception) {
+            logger.error(e) {
+                "Error parsing: ${e.message}\n$responseBody"
+            }
+            error("parse error in response")
+        }
+    } else {
+        when (status.value) {
+            400 -> throw BadRequestException(responseBody)
+            401 -> throw KeyException(responseBody)
+            402 -> throw QuotaException(responseBody)
+            403 -> throw ForbiddenException(responseBody)
+            408 -> throw TimeoutException(responseBody)
+            429 -> throw TooManyRequestsException(responseBody)
+            404,405,410,426 -> {
+                // if this persists, maybe contact opencage support
+                logger.error { "unexpected error $status: $responseBody" }
+                error("client bug, server returned $status: $responseBody")
+            }
+            500,503 -> error("server error: $status: $responseBody")
+            else -> {
+                logger.error { "unexpected error $status: $responseBody" }
+                error("Unexpected status: $status: $responseBody")
             }
         }
     }
@@ -151,7 +159,7 @@ class OpencageClient(
 sealed class OpenCageException(m: String,val code: Int, val response: String) : Exception(m)
 class BadRequestException(response: String): OpenCageException("validation failed", 400,response)
 class KeyException(response: String): OpenCageException("api key not accepted", 401,response)
-class QuotaException(response: String): OpenCageException("api key not accepted", 402,response)
+class QuotaException(response: String): OpenCageException("quota exceeded", 402,response)
 class ForbiddenException(response: String): OpenCageException("not authorized for API or ip address blocked", 403,response)
 class TimeoutException(response: String): OpenCageException("request timed out", 408,response)
 class TooManyRequestsException(response: String): OpenCageException("too many requests, slow down", 429,response)

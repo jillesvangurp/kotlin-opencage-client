@@ -1,13 +1,14 @@
 [![Process Pull Request](https://github.com/jillesvangurp/kotlin-opencage-client/actions/workflows/pr_master.yaml/badge.svg)](https://github.com/jillesvangurp/kotlin-opencage-client/actions/workflows/pr_master.yaml)
 
-Kotlin multi-platform client for the [Opencage](https://opencagedata.com/) geocoding API.
+Kotlin multiplatform client for the [OpenCage](https://opencagedata.com/) geocoding and geosearch APIs.
 
 ## Features
 
 - Geocode and reverse geocode using the Opencage API
+- Search for place and postcode suggestions using the geosearch service.
 - Kotlin friendly API and data classes that model the response.
-- Forward compatible with features that OpenCage adds; anyhting new and unsupported can be accessed via the raw response in `JsonObject` form. Any new unsupported request parameters may be added via an optional parameter that takes a map.
-- Works on all Kotlin platforms. Built around ktor client and kotinx.serialization which work on all Kotlin platforms: jvm, mobile (android/ios), native (windows, linux, mac) and soon web assembly.
+- Access unknown response fields through raw `JsonObject` values and pass new parameters through `additionalRequestParams`.
+- Built with Ktor and kotlinx.serialization for JVM, JavaScript, WebAssembly, and native targets.
 
 ## Gradle
 
@@ -31,5 +32,5 @@ And then you can add the dependency:
 
 ```kotlin
     // check the latest release tag for the latest version
-    implementation("com.jillesvangurp:kotlin-opencage-client:1.x.y")
+    implementation("com.jillesvangurp:kotlin-opencage-client:2.0.0")
 ```

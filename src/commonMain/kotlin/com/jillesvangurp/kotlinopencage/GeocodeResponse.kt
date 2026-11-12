@@ -20,8 +20,15 @@ val GeocodeResponse.licenses
 val GeocodeResponse.timestamp
     get() = this.deserialize<Timestamp>("timestamp") ?: error("timestamp missing")
 
+/** Absent for subscription customers, who do not have a hard daily quota. */
 val GeocodeResponse.rate
-    get() = this.deserialize<Rate>("rate") ?: error("rate missing")
+    get() = this.deserialize<Rate>("rate")
+
+val GeocodeResponse.status
+    get() = this.deserialize<Status>("status") ?: error("status missing")
+
+/** Present when the request includes `add_request=1`. */
+val GeocodeResponse.request get() = this.getObject("request")
 
 val GeocodeResponse.totalResults get() = this.getLong("total_results") ?: error("total_results missing")
 
@@ -71,6 +78,7 @@ data class Components(
     val category: String?,
     @SerialName("_normalized_city")
     val normalizedCity: String?,
+    @SerialName("_type")
     val type: String?,
     val city: String?,
     val continent: String?,
@@ -80,6 +88,8 @@ data class Components(
     @SerialName("house_number")
     val houseNumber: String?,
     val postcode: String?,
+    @SerialName("borough")
+    @Deprecated("Use borough instead", ReplaceWith("borough"))
     val borrow: String?,
     val neighbourhood: String?,
     @SerialName("political_union")
@@ -90,9 +100,28 @@ data class Components(
     @SerialName("state_code")
     val stateCode: String?,
     val suburb: String?,
-)
+    val town: String? = null,
+    val village: String? = null,
+    val municipality: String? = null,
+    val county: String? = null,
+    @SerialName("county_code")
+    val countyCode: String? = null,
+    @SerialName("state_district")
+    val stateDistrict: String? = null,
+    @SerialName("city_district")
+    val cityDistrict: String? = null,
+    @SerialName("road_type")
+    val roadType: String? = null,
+    val digipin: String? = null,
+) {
+    @Suppress("DEPRECATION")
+    val borough: String? get() = borrow
+}
 
 typealias Annotations = JsonObject
+
+@Serializable
+data class Status(val code: Int, val message: String)
 
 @Serializable
 data class Timestamp(
